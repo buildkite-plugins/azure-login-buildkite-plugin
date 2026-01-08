@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# Azure login functionality for Buildkite plugin
+
+set -euo pipefail
+
+# Performs Azure login based on plugin configuration
+# Supports managed identity and service principal authentication
+run_azure_login() {
+  local use_identity client_id client_secret tenant_id
+
+  use_identity=$(plugin_read_config USE_IDENTITY "false")
+  client_id=$(plugin_read_config CLIENT_ID "")
+  client_secret=$(plugin_read_config CLIENT_SECRET "")
+  tenant_id=$(plugin_read_config TENANT_ID "")
+
+  local args=()
+
+  if [[ "${use_identity}" =~ ^(true|on|1)$ ]]; then
+    # Managed identity authentication
+    log_info "Authenticating to Azure using managed identity"
+    args+=("--identity")
+
+    # Optionally specify which managed identity to use
+    if [[ -n "${client_id}" ]]; then
+      log_info "Using managed identity with client ID: ${client_id}"
+      args+=("--username" "${client_id}")
+    fi
+  elif [[ -n "${client_id}" && -n "${tenant_id}" ]]; then
+    # Service principal authentication
+    log_info "Authenticating to Azure using service principal"
+
+    # Resolve client secret - can be a direct value or environment variable name
+    local resolved_secret="${client_secret}"
+    # Check if client_secret looks like a valid env var name and that env var exists
+    if [[ -n "${client_secret}" && "${client_secret}" =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ && -n "${!client_secret:-}" ]]; then
+      # client_secret is an environment variable name
+      resolved_secret="${!client_secret}"
+      log_debug "Resolved client secret from environment variable: ${client_secret}"
+    fi
+
+    if [[ -z "${resolved_secret}" ]]; then
+      log_error "client-secret is required for service principal authentication"
+      exit 1
+    fi
+
+    args+=("--service-principal")
+    args+=("--username" "${client_id}")
+    args+=("--password" "${resolved_secret}")
+    args+=("--tenant" "${tenant_id}")
+  else
+    log_error "Invalid configuration: either use-identity must be true, or client-id and tenant-id must be provided for service principal authentication"
+    exit 1
+  fi
+
+  echo "--- :azure: Logging in to Azure"
+
+  if is_debug_mode; then
+    # Show command without secret
+    local display_args=("${args[@]}")
+    for i in "${!display_args[@]}"; do
+      if [[ "${display_args[i]}" == "--password" ]]; then
+        display_args[i+1]="***"
+      fi
+    done
+    log_debug "Running: az login ${display_args[*]}"
+  fi
+
+  if az login "${args[@]}"; then
+    log_success "Azure login successful"
+  else
+    log_error "Azure login failed"
+    exit 1
+  fi
+}
