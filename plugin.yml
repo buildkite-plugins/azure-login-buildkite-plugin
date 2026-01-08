@@ -1,0 +1,27 @@
+name: Azure Login
+description: Authenticates to Azure using managed identity or service principal
+author: https://github.com/buildkite
+requirements:
+  - bash
+  - az
+configuration:
+  properties:
+    hook:
+      type: string
+      enum:
+        - environment
+        - pre-command
+      description: "Which hook to run the Azure login in. Default: environment"
+    use-identity:
+      type: boolean
+      description: "Use managed identity authentication (az login --identity). Default: false"
+    client-id:
+      type: string
+      description: "Application (client) ID for service principal authentication"
+    client-secret:
+      type: string
+      description: "Client secret for service principal authentication. Can be a secret value or environment variable name."
+    tenant-id:
+      type: string
+      description: "Azure tenant ID for service principal authentication"
+  additionalProperties: false
