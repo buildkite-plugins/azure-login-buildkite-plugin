@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Only run in environment hook if hook is not set or is set to "environment"
+hook_setting="${BUILDKITE_PLUGIN_AZURE_LOGIN_HOOK:-environment}"
+if [[ "${hook_setting}" != "environment" ]]; then
+  exit 0
+fi
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=lib/shared.bash
+. "$DIR/../lib/shared.bash"
+
+# shellcheck source=lib/plugin.bash
+. "$DIR/../lib/plugin.bash"
+
+# shellcheck source=lib/azure-login
+. "$DIR/../lib/azure-login"
+
+setup_error_trap
+enable_debug_if_requested
+
+run_azure_login
