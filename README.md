@@ -134,7 +134,7 @@ steps:
 
 | Elastic Stack | Agent Stack K8s | Hosted (Mac) | Hosted (Linux) | Notes |
 | :-----------: | :-------------: | :----------: | :------------: | :---- |
-|       ?       |        ?        |      ?       |       ?        | Requires Azure CLI (`az`) to be installed |
+|       ⚠️       |        ⚠️        |      ⚠️       |       ⚠️        | Requires Azure CLI (`az`) to be installed and available to the agent |
 
 ## Developing
 
