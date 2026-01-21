@@ -24,7 +24,7 @@ run_azure_login() {
     # Optionally specify which managed identity to use
     if [[ -n "${client_id}" ]]; then
       log_info "Using managed identity with client ID: ${client_id}"
-      args+=("--username" "${client_id}")
+      args+=("--client-id" "${client_id}")
     fi
   elif [[ -n "${client_id}" && -n "${tenant_id}" ]]; then
     # Service principal authentication
