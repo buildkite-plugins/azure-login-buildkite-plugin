@@ -29,7 +29,7 @@ teardown() {
   export BUILDKITE_PLUGIN_AZURE_LOGIN_USE_IDENTITY="true"
   export BUILDKITE_PLUGIN_AZURE_LOGIN_CLIENT_ID="test-client-id"
 
-  stub az "login --identity --username test-client-id : echo 'Logged in with managed identity'"
+  stub az "login --identity --client-id test-client-id : echo 'Logged in with managed identity'"
 
   run "$PWD"/hooks/environment
 
