@@ -51,7 +51,7 @@ steps:
   - label: ":azure: Deploy to Azure"
     command: "az account show"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           use-identity: true
 ```
 
@@ -64,7 +64,7 @@ steps:
   - label: ":azure: Deploy to Azure"
     command: "az account show"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           use-identity: true
           client-id: "00000000-0000-0000-0000-000000000000"
 ```
@@ -78,7 +78,7 @@ steps:
   - label: ":azure: Deploy to Azure"
     command: "az account show"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           client-id: "00000000-0000-0000-0000-000000000000"
           client-secret: "your-client-secret"
           tenant-id: "00000000-0000-0000-0000-000000000000"
@@ -95,7 +95,7 @@ steps:
     env:
       AZURE_CLIENT_SECRET: "your-client-secret"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           client-id: "00000000-0000-0000-0000-000000000000"
           client-secret: "AZURE_CLIENT_SECRET"
           tenant-id: "00000000-0000-0000-0000-000000000000"
@@ -110,7 +110,7 @@ steps:
   - label: ":azure: Deploy to Azure"
     command: "az account show"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           hook: pre-command
           use-identity: true
 ```
@@ -126,7 +126,7 @@ steps:
     env:
       BUILDKITE_PLUGIN_DEBUG: "true"
     plugins:
-      - azure-login#v1.0.0:
+      - azure-login#v1.0.1:
           use-identity: true
 ```
 
